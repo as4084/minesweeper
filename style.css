@@ -5,6 +5,11 @@ body {
   font-family: "MS Sans Serif", "Tahoma", sans-serif;
 }
 
+body.landscape .window {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .window {
   background: #c0c0c0;
   padding: 6px;
@@ -13,8 +18,9 @@ body {
   border-color: #fff #808080 #808080 #fff;
 
   display: inline-block;
-  max-width: 95vw;   /* ← 追加 */
-  overflow: hidden;  /* ← はみ出し防止 */
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: auto;
 }
 
 /* タイトル */
@@ -61,8 +67,8 @@ body {
   display: grid;
   border: 3px solid;
   border-color: #808080 #fff #fff #808080;
-  max-width: 100%;
-  overflow: hidden;  /* ← 重要 */
+  width: max-content;
+  height: max-content;
   /* max-width: 95vw; */
   /* max-height: 70vh; */
 }
