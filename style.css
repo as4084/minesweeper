@@ -8,8 +8,13 @@ body {
 .window {
   background: #c0c0c0;
   padding: 6px;
+
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
+
+  display: inline-block;
+  max-width: 95vw;   /* ← 追加 */
+  overflow: hidden;  /* ← はみ出し防止 */
 }
 
 /* タイトル */
@@ -47,12 +52,19 @@ body {
   border-color: #fff #808080 #808080 #fff;
   background: #c0c0c0;
 }
+.face:active {
+  border-color: #808080 #fff #fff #808080;
+}
 
 /* 盤面 */
 #board {
   display: grid;
   border: 3px solid;
   border-color: #808080 #fff #fff #808080;
+  max-width: 100%;
+  overflow: hidden;  /* ← 重要 */
+  /* max-width: 95vw; */
+  /* max-height: 70vh; */
 }
 
 /* セル（立体） */
@@ -81,6 +93,10 @@ body {
 .cell.open {
   font-weight: bold;
   text-shadow: 0.5px 0.5px 0 #fff;
+}
+
+.cell:active {
+  border-color: #808080 #fff #fff #808080;
 }
 
 /* 数字色 */
@@ -114,10 +130,17 @@ body {
   font-size: 14px;
   justify-content: space-between;
   padding: 2px 6px;
+  border: 1px solid #808080;
 }
-.ranking li:nth-child(1) { background: gold; }
-.ranking li:nth-child(2) { background: silver; }
-.ranking li:nth-child(3) { background: #cd7f32; }
+.ranking li:nth-child(1) {
+  background: #ffd700; /* 金 */
+}
+.ranking li:nth-child(2) {
+  background: #dcdcdc; /* ← 明るいグレーに変更 */
+}
+.ranking li:nth-child(3) {
+  background: #cd7f32; /* 銅 */
+}
 
 .rank {
   font-weight: bold;
@@ -127,16 +150,6 @@ body {
 .name {
   text-align: left;
   padding-left: 5px;
-}
-
-/* 画面に収める */
-#board {
-  display: grid;
-  border: 3px solid;
-  border-color: #808080 #fff #fff #808080;
-
-  max-width: 95vw;
-  max-height: 70vh;
 }
 
 /* 上級だけ横スクロール防止 */
