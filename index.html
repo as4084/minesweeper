@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minesweeper</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minesweeper</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>💣 マインスイーパー</h1>
+<div class="window">
+  <div class="title-bar">Minesweeper</div>
 
-<div class="top-bar">
-  <button onclick="init()">リスタート</button>
+  <div class="panel">
+    <div class="counter" id="mineCount">010</div>
+
+    <button class="face" onclick="init()" id="face">😊</button>
+
+    <div class="counter" id="timer">000</div>
+  </div>
+
+  <div id="board"></div>
 </div>
-
-<div id="board"></div>
 
 <script src="script.js"></script>
 </body>
