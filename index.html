@@ -114,4 +114,48 @@ function openCell(r, c) {
   if (cell.count > 0) {
     cell.el.textContent = cell.count;
   } else {
-    for (let dr =
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        let nr = r + dr;
+        let nc = c + dc;
+        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+          openCell(nr, nc);
+        }
+      }
+    }
+  }
+
+  checkWin();
+}
+
+function revealMines() {
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (board[r][c].mine) {
+        board[r][c].el.classList.add("mine");
+      }
+    }
+  }
+}
+
+function checkWin() {
+  let safeCells = ROWS * COLS - MINES;
+  let opened = 0;
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (board[r][c].open && !board[r][c].mine) opened++;
+    }
+  }
+
+  if (opened === safeCells) {
+    alert("クリア！");
+    gameOver = true;
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
