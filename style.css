@@ -1,0 +1,56 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  background: #f5f5f5;
+}
+
+h1 {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+.top-bar {
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+#board {
+  display: grid;
+  justify-content: center;
+  gap: 2px;
+}
+
+.cell {
+  width: 9vw;
+  height: 9vw;
+  max-width: 40px;
+  max-height: 40px;
+
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  font-size: 18px;
+
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.open {
+  background: #eee;
+}
+
+.mine {
+  background: red;
+}
+
+.flag {
+  background: gold;
+}
