@@ -19,6 +19,8 @@ function init() {
   firstClick = true;
   timer = 0;
 
+  document.querySelector(".face").textContent = "😊";
+
   clearInterval(interval);
   document.getElementById("timer").textContent = "000";
 
@@ -96,9 +98,11 @@ function openCell(r, c) {
   if (cell.mine) {
     cell.el.textContent = "💣";
     cell.el.classList.add("explode");
+    document.querySelector(".face").textContent = "😣";
     revealMines();
     gameOver = true;
     clearInterval(interval);
+    saveScore(false);
     return;
   }
 
