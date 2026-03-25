@@ -159,16 +159,27 @@ function checkWin() {
 /* ランキング */
 function saveScore(win){
   if(!win) return;
-  let scores=JSON.parse(localStorage.getItem("scores")||"[]");
-  scores.push(timer);
-  scores.sort((a,b)=>a-b);
-  scores=scores.slice(0,5);
-  localStorage.setItem("scores",JSON.stringify(scores));
+
+  const name = prompt("名前を入力してください","プレイヤー") || "名無し";
+
+  let levelKey = `${ROWS}x${COLS}`;
+
+  let scores = JSON.parse(localStorage.getItem(levelKey) || "[]");
+
+  scores.push({ name, time: timer });
+
+  scores.sort((a,b)=>a.time-b.time);
+  scores = scores.slice(0,5);
+
+  localStorage.setItem(levelKey, JSON.stringify(scores));
+
   renderRanking();
 }
 
 function renderRanking(){
-  let scores = JSON.parse(localStorage.getItem("scores") || "[]");
+  let levelKey = `${ROWS}x${COLS}`;
+  let scores = JSON.parse(localStorage.getItem(levelKey) || "[]");
+
   let list = document.getElementById("rankingList");
   list.innerHTML = "";
 
@@ -176,12 +187,39 @@ function renderRanking(){
     let li = document.createElement("li");
 
     li.innerHTML = `
-      <span class="rank">${i + 1}位</span>
-      <span class="time">${s}秒</span>
+      <span class="rank">${i+1}位</span>
+      <span class="name">${s.name}</span>
+      <span class="time">${s.time}秒</span>
     `;
 
     list.appendChild(li);
   });
+}
+
+function setLevel(level) {
+  if (level === "easy") {
+    ROWS = 9; COLS = 9; MINES = 10;
+    document.body.classList.remove("landscape");
+  }
+
+  if (level === "medium") {
+    ROWS = 16; COLS = 16; MINES = 40;
+    document.body.classList.remove("landscape");
+  }
+
+  if (level === "hard") {
+    ROWS = 16; COLS = 30; MINES = 99;
+
+    // 横向き推奨
+    document.body.classList.add("landscape");
+
+    // スマホなら向き変更促す
+    if (window.innerHeight > window.innerWidth) {
+      alert("上級は横向きで遊ぶと快適です");
+    }
+  }
+
+  init();
 }
 
 init();
