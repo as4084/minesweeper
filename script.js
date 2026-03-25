@@ -78,40 +78,45 @@ function placeMines(safeR,safeC){
   }
 }
 
-function openCell(r,c){
-  const cell=board[r][c];
-  if(cell.open||cell.flag||gameOver) return;
+function openCell(r, c) {
+  if (!board[r] || !board[r][c]) return; // ← 追加（範囲外防止）
 
-  if(firstClick){
-    placeMines(r,c);
+  const cell = board[r][c];
+  if (cell.open || cell.flag || gameOver) return;
+
+  if (firstClick) {
+    placeMines(r, c);
     startTimer();
-    firstClick=false;
+    firstClick = false;
   }
 
-  cell.open=true;
+  cell.open = true;
   cell.el.classList.add("open");
 
-  if(cell.mine){
-    cell.el.textContent="💣";
+  if (cell.mine) {
+    cell.el.textContent = "💣";
     cell.el.classList.add("explode");
     revealMines();
-    gameOver=true;
-    saveScore(false);
+    gameOver = true;
+    clearInterval(interval);
     return;
   }
 
-  if(cell.count>0){
-    cell.el.textContent=cell.count;
-    cell.el.classList.add("n"+cell.count);
+  if (cell.count > 0) {
+    cell.el.textContent = cell.count;
+    cell.el.classList.add("n" + cell.count);
   } else {
-    for(let dr=-1;dr<=1;dr++){
-      for(let dc=-1;dc<=1;dc++){
-        openCell(r+dr,c+dc);
+    // ← BFS的に広げる（安定）
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        openCell(r + dr, c + dc);
       }
     }
   }
 
-  checkWin();
+  if (!gameOver) {
+  setTimeout(checkWin, 0); // ← 再帰完了後に実行
+  }
 }
 
 function revealMines(){
@@ -135,12 +140,17 @@ function startTimer(){
   },1000);
 }
 
-function checkWin(){
-  let safe=ROWS*COLS-MINES;
-  let opened=board.flat().filter(c=>c.open&&!c.mine).length;
+function checkWin() {
+  let opened = 0;
 
-  if(opened===safe){
-    gameOver=true;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (board[r][c].open && !board[r][c].mine) opened++;
+    }
+  }
+
+  if (opened === ROWS * COLS - MINES) {
+    gameOver = true;
     clearInterval(interval);
     saveScore(true);
   }
