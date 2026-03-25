@@ -168,12 +168,18 @@ function saveScore(win){
 }
 
 function renderRanking(){
-  let scores=JSON.parse(localStorage.getItem("scores")||"[]");
-  let list=document.getElementById("rankingList");
-  list.innerHTML="";
-  scores.forEach(s=>{
-    let li=document.createElement("li");
-    li.textContent=s+"秒";
+  let scores = JSON.parse(localStorage.getItem("scores") || "[]");
+  let list = document.getElementById("rankingList");
+  list.innerHTML = "";
+
+  scores.forEach((s, i) => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      <span class="rank">${i + 1}位</span>
+      <span class="time">${s}秒</span>
+    `;
+
     list.appendChild(li);
   });
 }
