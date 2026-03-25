@@ -1,12 +1,10 @@
 body {
-  background: #008080; /* Windows背景 */
+  background: #008080;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   font-family: sans-serif;
 }
 
-/* ウィンドウ */
 .window {
   background: #c0c0c0;
   padding: 6px;
@@ -14,96 +12,64 @@ body {
   border-color: #fff #808080 #808080 #fff;
 }
 
-/* タイトルバー */
+/* タイトル */
 .title-bar {
   background: #000080;
   color: white;
   padding: 4px;
-  font-weight: bold;
-  margin-bottom: 5px;
 }
 
-/* 上部パネル */
+/* パネル */
 .panel {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-
   padding: 5px;
-  background: #c0c0c0;
+  margin: 5px 0;
 
   border: 2px solid;
   border-color: #808080 #fff #fff #808080;
 }
 
-/* カウンタ */
+/* 7セグ風 */
 .counter {
   background: black;
   color: red;
-  font-family: monospace;
-  font-size: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 22px;
   padding: 3px 8px;
 
   border: 2px inset #808080;
 }
 
-/* 顔ボタン */
+/* 顔 */
 .face {
-  font-size: 20px;
-  padding: 5px 10px;
-  cursor: pointer;
-
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
   background: #c0c0c0;
-}
-
-.face:active {
-  border-color: #808080 #fff #fff #808080;
 }
 
 /* 盤面 */
 #board {
   display: grid;
-  gap: 0;
   border: 3px solid;
   border-color: #808080 #fff #fff #808080;
 }
 
-/* セル */
+/* セル（立体） */
 .cell {
   width: 30px;
   height: 30px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-weight: bold;
-  font-size: 18px;
-
-  user-select: none;
 
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
   background: #c0c0c0;
 }
 
-/* 開いたセル */
 .open {
   border: 1px solid #808080;
-  background: #c0c0c0;
-}
-
-/* 地雷 */
-.mine {
-  background: red;
-}
-
-/* 旗 */
-.flag::after {
-  content: "🚩";
 }
 
 /* 数字色 */
@@ -115,3 +81,13 @@ body {
 .n6 { color: teal; }
 .n7 { color: black; }
 .n8 { color: gray; }
+
+/* 爆発 */
+.explode {
+  animation: boom 0.3s ease;
+}
+
+@keyframes boom {
+  0% { background: yellow; }
+  100% { background: red; }
+}
