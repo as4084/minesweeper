@@ -5,6 +5,7 @@ let gameOver = false;
 let firstClick = true;
 let timer = 0;
 let interval;
+let winHandled = false;
 
 function setLevel(level) {
   if (level === "easy") { ROWS=9; COLS=9; MINES=10; }
@@ -18,6 +19,7 @@ function init() {
   gameOver = false;
   firstClick = true;
   timer = 0;
+  winHandled = false;
 
   document.querySelector(".face").textContent = "😊";
 
@@ -145,6 +147,8 @@ function startTimer(){
 }
 
 function checkWin() {
+  if (gameOver || winHandled) return;
+  
   let opened = 0;
 
   for (let r = 0; r < ROWS; r++) {
@@ -155,6 +159,7 @@ function checkWin() {
 
   if (opened === ROWS * COLS - MINES) {
     gameOver = true;
+    winHandled = true;
     clearInterval(interval);
     saveScore(true);
   }
