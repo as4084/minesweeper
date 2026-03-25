@@ -1,248 +1,112 @@
-const ROWS = 9;
-const COLS = 9;
-const MINES = 10;
+let ROWS = 9, COLS = 9, MINES = 10;
 
 let board = [];
 let gameOver = false;
+let firstClick = true;
 let timer = 0;
-let timerInterval;
+let interval;
+
+function setLevel(level) {
+  if (level === "easy") { ROWS=9; COLS=9; MINES=10; }
+  if (level === "medium") { ROWS=16; COLS=16; MINES=40; }
+  if (level === "hard") { ROWS=16; COLS=30; MINES=99; }
+  init();
+}
 
 function init() {
   board = [];
   gameOver = false;
+  firstClick = true;
   timer = 0;
 
+  clearInterval(interval);
   document.getElementById("timer").textContent = "000";
-  document.getElementById("face").textContent = "😊";
-
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timer++;
-    document.getElementById("timer").textContent =
-      String(timer).padStart(3, "0");
-  }, 1000);
 
   const boardDiv = document.getElementById("board");
   boardDiv.style.gridTemplateColumns = `repeat(${COLS}, 30px)`;
   boardDiv.innerHTML = "";
 
-  for (let r = 0; r < ROWS; r++) {
-    board[r] = [];
+  for (let r=0;r<ROWS;r++) {
+    board[r]=[];
+    for (let c=0;c<COLS;c++) {
+      const el=document.createElement("div");
+      el.className="cell";
 
-    for (let c = 0; c < COLS; c++) {
-      const el = document.createElement("div");
-      el.className = "cell";
+      const cell={mine:false,open:false,flag:false,count:0,el};
 
-      const cell = {
-        mine: false,
-        open: false,
-        flag: false,
-        count: 0,
-        el
-      };
-
-      // 右クリック（PC）
-      el.oncontextmenu = (e) => {
+      el.oncontextmenu=(e)=>{
         e.preventDefault();
         if (!cell.open) {
-          cell.flag = !cell.flag;
-          el.classList.toggle("flag");
+          cell.flag=!cell.flag;
+          cell.el.textContent = cell.flag ? "🚩" : "";
           updateMineCount();
         }
       };
 
-      // スマホ長押し
-      let pressTimer;
-      el.addEventListener("touchstart", () => {
-        pressTimer = setTimeout(() => {
-          if (!cell.open) {
-            cell.flag = !cell.flag;
-            el.classList.toggle("flag");
-            updateMineCount();
-          }
-        }, 400);
-      });
-      el.addEventListener("touchend", () => clearTimeout(pressTimer));
-
-      el.onclick = () => openCell(r, c);
+      el.onclick=()=>openCell(r,c);
 
       boardDiv.appendChild(el);
-      board[r][c] = cell;
-    }
-  }
-
-  // 地雷配置
-  let placed = 0;
-  while (placed < MINES) {
-    let r = Math.floor(Math.random() * ROWS);
-    let c = Math.floor(Math.random() * COLS);
-    if (!board[r][c].mine) {
-      board[r][c].mine = true;
-      placed++;
-    }
-  }
-
-  // 数字
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].mine) continue;
-
-      let count = 0;
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          let nr = r + dr;
-          let nc = c + dc;
-          if (board[nr] && board[nr][nc]?.mine) count++;
-        }
-      }
-      board[r][c].count = count;
+      board[r][c]=cell;
     }
   }
 
   updateMineCount();
 }
 
-function updateMineCount() {
-  let flags = 0;
-  board.flat().forEach(c => { if (c.flag) flags++; });
-
-  let remain = MINES - flags;
-  document.getElementById("mineCount").textContent =
-    String(remain).padStart(3, "0");
-}
-
-function openCell(r, c) {
-  const cell = board[r][c];
-  if (cell.open || cell.flag || gameOver) return;
-
-  document.getElementById("face").textContent = "😮";
-
-  cell.open = true;
-  cell.el.classList.add("open");
-
-  if (cell.mine) {
-    cell.el.classList.add("mine");
-    document.getElementById("face").textContent = "😵";
-    revealMines();
-    gameOver = true;
-    clearInterval(timerInterval);
-    return;
-  }
-
-  if (cell.count > 0) {
-    cell.el.textContent = cell.count;
-    cell.el.classList.add("n" + cell.count);
-  } else {
-    for (let dr = -1; dr <= 1; dr++) {
-      for (let dc = -1; dc <= 1; dc++) {
-        let nr = r + dr;
-        let nc = c + dc;
-        if (board[nr] && board[nr][nc]) openCell(nr, nc);
-      }
-    }
-  }
-
-  checkWin();
-  document.getElementById("face").textContent = "😊";
-}
-
-function revealMines() {
-  board.flat().forEach(c => {
-    if (c.mine) c.el.classList.add("mine");
-  });
-}
-
-function checkWin() {
-  let safe = ROWS * COLS - MINES;
-  let opened = board.flat().filter(c => c.open && !c.mine).length;
-
-  if (opened === safe) {
-    document.getElementById("face").textContent = "😎";
-    clearInterval(timerInterval);
-    gameOver = true;
-  }
-}
-
-init();            cell.flag = !cell.flag;
-            el.classList.toggle("flag");
-          }
-        }, 400);
-      });
-
-      el.addEventListener("touchend", () => {
-        clearTimeout(pressTimer);
-      });
-
-      // 👇 タップで開く
-      el.addEventListener("click", () => openCell(r, c));
-
-      boardDiv.appendChild(el);
-      board[r][c] = cell;
-    }
-  }
-
-  // 地雷配置
-  let placed = 0;
-  while (placed < MINES) {
-    let r = Math.floor(Math.random() * ROWS);
-    let c = Math.floor(Math.random() * COLS);
-
-    if (!board[r][c].mine) {
-      board[r][c].mine = true;
+function placeMines(safeR,safeC){
+  let placed=0;
+  while(placed<MINES){
+    let r=Math.floor(Math.random()*ROWS);
+    let c=Math.floor(Math.random()*COLS);
+    if(!board[r][c].mine && !(r===safeR && c===safeC)){
+      board[r][c].mine=true;
       placed++;
     }
   }
 
-  // 数字計算
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].mine) continue;
-
-      let count = 0;
-
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          let nr = r + dr;
-          let nc = c + dc;
-
-          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
-            if (board[nr][nc].mine) count++;
-          }
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      let count=0;
+      for(let dr=-1;dr<=1;dr++){
+        for(let dc=-1;dc<=1;dc++){
+          let nr=r+dr,nc=c+dc;
+          if(board[nr]?.[nc]?.mine) count++;
         }
       }
-
-      board[r][c].count = count;
+      board[r][c].count=count;
     }
   }
 }
 
-function openCell(r, c) {
-  const cell = board[r][c];
+function openCell(r,c){
+  const cell=board[r][c];
+  if(cell.open||cell.flag||gameOver) return;
 
-  if (cell.open || cell.flag || gameOver) return;
+  if(firstClick){
+    placeMines(r,c);
+    startTimer();
+    firstClick=false;
+  }
 
-  cell.open = true;
+  cell.open=true;
   cell.el.classList.add("open");
 
-  if (cell.mine) {
-    cell.el.classList.add("mine");
-    alert("ゲームオーバー");
+  if(cell.mine){
+    cell.el.textContent="💣";
+    cell.el.classList.add("explode");
     revealMines();
-    gameOver = true;
+    gameOver=true;
+    saveScore(false);
     return;
   }
 
-  if (cell.count > 0) {
-    cell.el.textContent = cell.count;
+  if(cell.count>0){
+    cell.el.textContent=cell.count;
+    cell.el.classList.add("n"+cell.count);
   } else {
-    for (let dr = -1; dr <= 1; dr++) {
-      for (let dc = -1; dc <= 1; dc++) {
-        let nr = r + dr;
-        let nc = c + dc;
-
-        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
-          openCell(nr, nc);
-        }
+    for(let dr=-1;dr<=1;dr++){
+      for(let dc=-1;dc<=1;dc++){
+        openCell(r+dr,c+dc);
       }
     }
   }
@@ -250,30 +114,59 @@ function openCell(r, c) {
   checkWin();
 }
 
-function revealMines() {
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].mine) {
-        board[r][c].el.classList.add("mine");
-      }
-    }
+function revealMines(){
+  board.flat().forEach(c=>{
+    if(c.mine) c.el.textContent="💣";
+  });
+}
+
+function updateMineCount(){
+  let flags=board.flat().filter(c=>c.flag).length;
+  let remain=MINES-flags;
+  document.getElementById("mineCount").textContent=
+    String(remain).padStart(3,"0");
+}
+
+function startTimer(){
+  interval=setInterval(()=>{
+    timer++;
+    document.getElementById("timer").textContent=
+      String(timer).padStart(3,"0");
+  },1000);
+}
+
+function checkWin(){
+  let safe=ROWS*COLS-MINES;
+  let opened=board.flat().filter(c=>c.open&&!c.mine).length;
+
+  if(opened===safe){
+    gameOver=true;
+    clearInterval(interval);
+    saveScore(true);
   }
 }
 
-function checkWin() {
-  let safe = ROWS * COLS - MINES;
-  let opened = 0;
+/* ランキング */
+function saveScore(win){
+  if(!win) return;
+  let scores=JSON.parse(localStorage.getItem("scores")||"[]");
+  scores.push(timer);
+  scores.sort((a,b)=>a-b);
+  scores=scores.slice(0,5);
+  localStorage.setItem("scores",JSON.stringify(scores));
+  renderRanking();
+}
 
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].open && !board[r][c].mine) opened++;
-    }
-  }
-
-  if (opened === safe) {
-    alert("クリア！");
-    gameOver = true;
-  }
+function renderRanking(){
+  let scores=JSON.parse(localStorage.getItem("scores")||"[]");
+  let list=document.getElementById("rankingList");
+  list.innerHTML="";
+  scores.forEach(s=>{
+    let li=document.createElement("li");
+    li.textContent=s+"秒";
+    list.appendChild(li);
+  });
 }
 
 init();
+renderRanking();
