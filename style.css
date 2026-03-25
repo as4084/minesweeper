@@ -5,6 +5,7 @@ body {
   font-family: "MS Sans Serif", "Tahoma", sans-serif;
 }
 
+/* 上級横スクロール */
 body.landscape .window {
   overflow-x: auto;
   overflow-y: hidden;
@@ -18,9 +19,11 @@ body.landscape .window {
   border-color: #fff #808080 #808080 #fff;
 
   display: inline-block;
+
   max-width: 95vw;
   max-height: 90vh;
-  overflow: auto;
+
+  overflow: auto; /* ← ここが重要 */
 }
 
 /* タイトル */
@@ -41,7 +44,7 @@ body.landscape .window {
   border-color: #808080 #fff #fff #808080;
 }
 
-/* 7セグ風 */
+/* 7セグ */
 .counter {
   background: black;
   color: red;
@@ -67,19 +70,17 @@ body.landscape .window {
   display: grid;
   border: 3px solid;
   border-color: #808080 #fff #fff #808080;
+
   width: max-content;
   height: max-content;
-  /* max-width: 95vw; */
-  /* max-height: 70vh; */
 }
 
-/* セル（立体） */
+/* セル */
 .cell {
-  /* セルサイズを可変 */
   width: min(30px, 8vw);
   height: min(30px, 8vw);
 
-  box-sizing: border-box; /* ← これ重要 */
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -90,19 +91,17 @@ body.landscape .window {
   background: #c0c0c0;
 }
 
-.open {
-  border: 2px solid #808080; /* ← 太さを揃える */
-  background: #c0c0c0;
+.cell:active {
+  border-color: #808080 #fff #fff #808080;
 }
 
-/* 数字をXPっぽく */
+.open {
+  border: 2px solid #808080;
+}
+
 .cell.open {
   font-weight: bold;
   text-shadow: 0.5px 0.5px 0 #fff;
-}
-
-.cell:active {
-  border-color: #808080 #fff #fff #808080;
 }
 
 /* 数字色 */
@@ -120,45 +119,31 @@ body.landscape .window {
   animation: boom 0.3s ease;
 }
 
-.time {
-  font-family: monospace;
-  color: #333;
-}
-
 @keyframes boom {
   0% { background: yellow; }
   100% { background: red; }
 }
 
+/* ランキング */
 .ranking li {
   display: grid;
   grid-template-columns: 50px 1fr 60px;
-  font-size: 14px;
-  justify-content: space-between;
   padding: 2px 6px;
   border: 1px solid #808080;
 }
-.ranking li:nth-child(1) {
-  background: #ffd700; /* 金 */
-}
-.ranking li:nth-child(2) {
-  background: #dcdcdc; /* ← 明るいグレーに変更 */
-}
-.ranking li:nth-child(3) {
-  background: #cd7f32; /* 銅 */
-}
+
+.ranking li:nth-child(1) { background: #ffd700; }
+.ranking li:nth-child(2) { background: #dcdcdc; }
+.ranking li:nth-child(3) { background: #cd7f32; }
 
 .rank {
   font-weight: bold;
-  color: #000;
 }
 
 .name {
-  text-align: left;
   padding-left: 5px;
 }
 
-/* 上級だけ横スクロール防止 */
-body.landscape #board {
-  max-height: 80vh;
+.time {
+  font-family: monospace;
 }
