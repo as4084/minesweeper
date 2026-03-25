@@ -1,37 +1,81 @@
 body {
+  background: #008080; /* Windows背景 */
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
   font-family: sans-serif;
-  text-align: center;
-  margin: 0;
-  background: #f5f5f5;
 }
 
-h1 {
-  margin: 10px 0;
+/* ウィンドウ */
+.window {
+  background: #c0c0c0;
+  padding: 6px;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+/* タイトルバー */
+.title-bar {
+  background: #000080;
+  color: white;
+  padding: 4px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 上部パネル */
+.panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+
+  padding: 5px;
+  background: #c0c0c0;
+
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+/* カウンタ */
+.counter {
+  background: black;
+  color: red;
+  font-family: monospace;
   font-size: 20px;
+  padding: 3px 8px;
+
+  border: 2px inset #808080;
 }
 
-.top-bar {
-  margin-bottom: 10px;
+/* 顔ボタン */
+.face {
+  font-size: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  background: #c0c0c0;
 }
 
-button {
-  padding: 8px 16px;
-  font-size: 16px;
+.face:active {
+  border-color: #808080 #fff #fff #808080;
 }
 
+/* 盤面 */
 #board {
   display: grid;
-  justify-content: center;
-  gap: 2px;
+  gap: 0;
+  border: 3px solid;
+  border-color: #808080 #fff #fff #808080;
 }
 
+/* セル */
 .cell {
-  width: 9vw;
-  height: 9vw;
-  max-width: 40px;
-  max-height: 40px;
+  width: 30px;
+  height: 30px;
 
-  background: #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,17 +84,34 @@ button {
   font-size: 18px;
 
   user-select: none;
-  touch-action: manipulation;
+
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  background: #c0c0c0;
 }
 
+/* 開いたセル */
 .open {
-  background: #eee;
+  border: 1px solid #808080;
+  background: #c0c0c0;
 }
 
+/* 地雷 */
 .mine {
   background: red;
 }
 
-.flag {
-  background: gold;
+/* 旗 */
+.flag::after {
+  content: "🚩";
 }
+
+/* 数字色 */
+.n1 { color: blue; }
+.n2 { color: green; }
+.n3 { color: red; }
+.n4 { color: navy; }
+.n5 { color: brown; }
+.n6 { color: teal; }
+.n7 { color: black; }
+.n8 { color: gray; }
