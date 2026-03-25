@@ -91,6 +91,25 @@ body {
   animation: boom 0.3s ease;
 }
 
+.ranking li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 6px;
+}
+.ranking li:nth-child(1) { background: gold; }
+.ranking li:nth-child(2) { background: silver; }
+.ranking li:nth-child(3) { background: #cd7f32; }
+
+.rank {
+  font-weight: bold;
+  color: #000;
+}
+
+.time {
+  font-family: monospace;
+  color: #333;
+}
+
 @keyframes boom {
   0% { background: yellow; }
   100% { background: red; }
