@@ -1,161 +1,21 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Minesweeper</title>
-<style>
-  body { font-family: sans-serif; text-align: center; }
-  #board { display: inline-grid; gap: 2px; margin-top: 20px; }
-  .cell {
-    width: 30px; height: 30px;
-    background: #ccc;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .open { background: #eee; cursor: default; }
-  .mine { background: red; }
-  .flag { background: yellow; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>マインスイーパー</h2>
+<h1>💣 マインスイーパー</h1>
+
+<div class="top-bar">
+  <button onclick="init()">リスタート</button>
+</div>
+
 <div id="board"></div>
 
-<script>
-const ROWS = 10;
-const COLS = 10;
-const MINES = 15;
-
-let board = [];
-let gameOver = false;
-
-function init() {
-  board = [];
-  gameOver = false;
-  const boardDiv = document.getElementById("board");
-  boardDiv.style.gridTemplateColumns = `repeat(${COLS}, 30px)`;
-  boardDiv.innerHTML = "";
-
-  // セル作成
-  for (let r = 0; r < ROWS; r++) {
-    board[r] = [];
-    for (let c = 0; c < COLS; c++) {
-      const cell = {
-        mine: false,
-        open: false,
-        flag: false,
-        count: 0,
-        el: document.createElement("div")
-      };
-
-      cell.el.className = "cell";
-      cell.el.oncontextmenu = (e) => {
-        e.preventDefault();
-        if (!cell.open) {
-          cell.flag = !cell.flag;
-          cell.el.classList.toggle("flag");
-        }
-      };
-
-      cell.el.onclick = () => openCell(r, c);
-
-      boardDiv.appendChild(cell.el);
-      board[r][c] = cell;
-    }
-  }
-
-  // 地雷配置
-  let placed = 0;
-  while (placed < MINES) {
-    let r = Math.floor(Math.random() * ROWS);
-    let c = Math.floor(Math.random() * COLS);
-    if (!board[r][c].mine) {
-      board[r][c].mine = true;
-      placed++;
-    }
-  }
-
-  // 数字計算
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].mine) continue;
-      let count = 0;
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          let nr = r + dr;
-          let nc = c + dc;
-          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
-            if (board[nr][nc].mine) count++;
-          }
-        }
-      }
-      board[r][c].count = count;
-    }
-  }
-}
-
-function openCell(r, c) {
-  const cell = board[r][c];
-  if (cell.open || cell.flag || gameOver) return;
-
-  cell.open = true;
-  cell.el.classList.add("open");
-
-  if (cell.mine) {
-    cell.el.classList.add("mine");
-    alert("ゲームオーバー");
-    gameOver = true;
-    revealMines();
-    return;
-  }
-
-  if (cell.count > 0) {
-    cell.el.textContent = cell.count;
-  } else {
-    for (let dr = -1; dr <= 1; dr++) {
-      for (let dc = -1; dc <= 1; dc++) {
-        let nr = r + dr;
-        let nc = c + dc;
-        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
-          openCell(nr, nc);
-        }
-      }
-    }
-  }
-
-  checkWin();
-}
-
-function revealMines() {
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].mine) {
-        board[r][c].el.classList.add("mine");
-      }
-    }
-  }
-}
-
-function checkWin() {
-  let safeCells = ROWS * COLS - MINES;
-  let opened = 0;
-
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c].open && !board[r][c].mine) opened++;
-    }
-  }
-
-  if (opened === safeCells) {
-    alert("クリア！");
-    gameOver = true;
-  }
-}
-
-init();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
