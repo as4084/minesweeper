@@ -22,10 +22,6 @@ function setLevel(level) {
   if (level === "hard") {
     ROWS = 16; COLS = 30; MINES = 99;
     document.body.classList.add("landscape");
-
-    if (window.innerHeight > window.innerWidth) {
-      alert("上級は横向きで遊ぶと快適です");
-    }
   }
 
   init();
