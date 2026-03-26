@@ -29,6 +29,7 @@ function setLevel(level) {
   }
 
   init();
+  renderRanking();
 }
 
 /* 初期化 */
