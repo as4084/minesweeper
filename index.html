@@ -9,28 +9,32 @@
 <body>
 
 <div class="window">
-  <div class="title-bar">Minesweeper</div>
 
-  <div class="panel">
-    <div class="counter" id="mineCount">010</div>
+  <div class="header">
+    <div class="title-bar">Minesweeper</div>
 
-    <button class="face" onclick="init()">😊</button>
+    <div class="panel">
+      <div class="counter" id="mineCount">010</div>
+      <button class="face" onclick="init()">😊</button>
+      <div class="counter" id="timer">000</div>
+    </div>
 
-    <div class="counter" id="timer">000</div>
+    <div class="difficulty">
+      <button onclick="setLevel('easy')">初級</button>
+      <button onclick="setLevel('medium')">中級</button>
+      <button onclick="setLevel('hard')">上級</button>
+    </div>
   </div>
 
-  <div class="difficulty">
-    <button onclick="setLevel('easy')">初級</button>
-    <button onclick="setLevel('medium')">中級</button>
-    <button onclick="setLevel('hard')">上級</button>
+  <div class="board-container">
+    <div id="board"></div>
   </div>
-
-  <div id="board"></div>
 
   <div class="ranking">
     <h3>ランキング</h3>
     <ol id="rankingList"></ol>
   </div>
+
 </div>
 
 <script src="script.js"></script>
