@@ -45,27 +45,36 @@ function init(){
 
       /* タッチ */
       let pressTimer;
-      let longPress=false;
+      let startTime = 0;
+      let longPress = false;
 
-      el.addEventListener("touchstart",(e)=>{
-        longPress=false;
-        pressTimer=setTimeout(()=>{
-          if(!cell.open){
-            cell.flag=!cell.flag;
-            el.textContent=cell.flag?"🚩":"";
+      el.addEventListener("touchstart", (e) => {
+        startTime = Date.now();
+        longPress = false;
+
+        pressTimer = setTimeout(() => {
+          if (!cell.open && !gameOver) {
+            cell.flag = !cell.flag;
+            el.textContent = cell.flag ? "🚩" : "";
             updateMineCount();
-            longPress=true;
+            longPress = true;
           }
-        },400);
+        }, 350); // ← 少し短くして反応改善
       });
 
-      el.addEventListener("touchend",()=>{
+      el.addEventListener("touchend", () => {
         clearTimeout(pressTimer);
-        if(!longPress) openCell(r,c);
+
+        const touchDuration = Date.now() - startTime;
+
+        // 長押し未成立 ＆ 短タップのみ開く
+        if (!longPress && touchDuration < 300) {
+          openCell(r, c);
+        }
       });
 
-      el.addEventListener("touchmove",()=>{
-        clearTimeout(pressTimer);
+      el.addEventListener("touchmove", () => {
+        // 少しだけ許容（完全キャンセルしない）
       });
 
       /* マウス */
@@ -95,10 +104,10 @@ function setFace(face){
 
 function delayedFaceReset(){
   setTimeout(()=>{
-    if(!gameOver){
+    if(!gameOver){  // ← これで爆発後は戻らない
       setFace("🙂");
     }
-  },500); // ← 0.5秒
+  },500);
 }
 
 /* 地雷 */
@@ -144,13 +153,15 @@ function openCell(r,c){
   cell.el.classList.add("open");
 
   if(cell.mine){
-    cell.el.textContent="💣";
-    cell.el.classList.add("explode");
-    setFace("😵");
-    revealMines();
-    gameOver=true;
-    clearInterval(interval);
-    return;
+  cell.el.textContent="💣";
+  cell.el.classList.add("explode");
+
+  gameOver=true;          // ← 先に立てる（超重要）
+  setFace("😵‍💫");        // ← 顔変更
+
+  revealMines();
+  clearInterval(interval);
+  return;
   }
 
   if(cell.count>0){
@@ -164,8 +175,10 @@ function openCell(r,c){
     }
   }
 
+  if(!gameOver){
   setTimeout(checkWin,0);
   delayedFaceReset();
+  }
 }
 
 /* その他 */
