@@ -18,7 +18,8 @@ body.landscape .window {
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
 
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
 
   max-width: 95vw;
   max-height: 90vh;
@@ -31,6 +32,17 @@ body.landscape .window {
   background: #000080;
   color: white;
   padding: 4px;
+}
+
+/* 上固定 */
+.header {
+  flex-shrink: 0;
+}
+
+/* 中だけスクロール */
+.board-container {
+  overflow: auto;
+  max-height: 60vh;
 }
 
 /* パネル */
@@ -122,6 +134,12 @@ body.landscape .window {
 @keyframes boom {
   0% { background: yellow; }
   100% { background: red; }
+}
+
+/* 下固定 */
+.ranking {
+  flex-shrink: 0;
+  background: #c0c0c0;
 }
 
 /* ランキング */
