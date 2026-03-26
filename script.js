@@ -54,6 +54,7 @@ function init() {
 
       const cell = { mine:false, open:false, flag:false, count:0, el };
 
+      /* ===== 右クリック（PC） ===== */
       el.oncontextmenu = (e) => {
         e.preventDefault();
         if (!cell.open && !gameOver) {
@@ -62,6 +63,47 @@ function init() {
           updateMineCount();
         }
       };
+
+      /* ===== タッチ操作（スマホ） ===== */
+      let pressTimer;
+      let isLongPress = false;
+
+      el.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        isLongPress = false;
+
+        pressTimer = setTimeout(() => {
+          if (!cell.open && !gameOver) {
+            cell.flag = !cell.flag;
+            el.textContent = cell.flag ? "🚩" : "";
+            updateMineCount();
+            isLongPress = true;
+          }
+        }, 400);
+      });
+
+      el.addEventListener("touchend", () => {
+        clearTimeout(pressTimer);
+
+        if (!isLongPress) {
+          openCell(r, c);
+        }
+      });
+
+      el.addEventListener("touchmove", () => {
+        clearTimeout(pressTimer);
+      });
+
+      /* ===== マウス（PC） ===== */
+      el.addEventListener("mousedown", () => {
+        document.querySelector(".face").textContent = "😮";
+      });
+
+      el.addEventListener("mouseup", () => {
+        if (!gameOver) {
+          document.querySelector(".face").textContent = "🙂";
+        }
+      });
 
       el.onclick = () => openCell(r, c);
 
