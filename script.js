@@ -36,7 +36,7 @@ function init() {
   timer = 0;
   winHandled = false;
 
-  document.querySelector(".face").textContent = "😊";
+  document.querySelector(".face").textContent = "🙂";
 
   clearInterval(interval);
   document.getElementById("timer").textContent = "000";
@@ -105,6 +105,8 @@ function placeMines(sr, sc) {
 
 /* 開く */
 function openCell(r, c) {
+  document.querySelector(".face").textContent = "😮";
+  
   if (!board[r] || !board[r][c]) return;
 
   const cell = board[r][c];
@@ -122,7 +124,7 @@ function openCell(r, c) {
   if (cell.mine) {
     cell.el.textContent = "💣";
     cell.el.classList.add("explode");
-    document.querySelector(".face").textContent = "😣";
+    document.querySelector(".face").textContent = "😵‍💫";
 
     revealMines();
     gameOver = true;
@@ -142,6 +144,9 @@ function openCell(r, c) {
   }
 
   setTimeout(checkWin, 0);
+  if (!gameOver) {
+  document.querySelector(".face").textContent = "🙂";
+  }
 }
 
 /* 地雷表示 */
