@@ -3,6 +3,7 @@ let ROWS=9, COLS=9, MINES=10;
 let board=[], gameOver=false, firstClick=true;
 let timer=0, interval;
 let winHandled=false;
+let faceLocked = false;
 
 /* 難易度 */
 function setLevel(level){
@@ -16,6 +17,7 @@ function setLevel(level){
 function init(){
   board=[]; gameOver=false; firstClick=true;
   timer=0; winHandled=false;
+  faceLocked = false;
 
   clearInterval(interval);
   document.getElementById("timer").textContent="000";
@@ -104,7 +106,7 @@ function setFace(face){
 
 function delayedFaceReset(){
   setTimeout(()=>{
-    if(!gameOver){  // ← これで爆発後は戻らない
+    if(!gameOver && !faceLocked){  // ← これで爆発後は戻らない
       setFace("🙂");
     }
   },500);
@@ -153,15 +155,16 @@ function openCell(r,c){
   cell.el.classList.add("open");
 
   if(cell.mine){
-  cell.el.textContent="💣";
-  cell.el.classList.add("explode");
+    cell.el.textContent="💣";
+    cell.el.classList.add("explode");
 
-  gameOver=true;          // ← 先に立てる（超重要）
-  setFace("😵‍💫");        // ← 顔変更
+    gameOver=true;          // ← 先に立てる（超重要）
+    faceLocked = true;
+    setFace("😵‍💫");        // ← 顔変更
 
-  revealMines();
-  clearInterval(interval);
-  return;
+    revealMines();
+    clearInterval(interval);
+    return;
   }
 
   if(cell.count>0){
