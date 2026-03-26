@@ -81,7 +81,9 @@ function init(){
 
       /* マウス */
       el.addEventListener("mousedown",()=>{
-        setFace("😮");
+        if(!gameOver && !faceLocked){
+          setFace("😮");
+        }
       });
 
       el.addEventListener("mouseup",()=>{
@@ -143,7 +145,9 @@ function openCell(r,c){
   const cell=board[r][c];
   if(cell.open||cell.flag||gameOver) return;
 
-  setFace("😮");
+  if(!gameOver && !faceLocked){
+    setFace("😮");
+  }
 
   if(firstClick){
     placeMines(r,c);
